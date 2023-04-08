@@ -50,8 +50,13 @@
   margin-top: 20px
 }
 
-table, th, td {
+table {
+  border: 1px solid;
+  border-color: #f1356d;  
+}
+
+th, td {
   border: 1px solid;
   border-color: #f1356d;
-  
+  padding-right: 15px;
 }
