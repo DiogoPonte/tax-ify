@@ -33,3 +33,15 @@
   margin: 40px auto;
   padding: 20px;
 }
+
+.csv_input {
+  margin-top: 15px
+}
+
+.submit_btn {
+  margin-left: 5px;
+}
+
+.action {
+  margin-top: 30px
+}
