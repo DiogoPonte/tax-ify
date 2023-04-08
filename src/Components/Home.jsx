@@ -31,29 +31,28 @@ const Home = () => {
 
     };
 
-    const [csv, setParsedCsvData] = useState([]);
+    let [csv, setParsedCsvData] = useState([]);
     
 
     const handleFile = () => {
         readString(file, {
             worker: true,
-            complete: (results) => {
-              console.log('---------------------------');
-              console.log(results);
-              console.log('---------------------------');
-            },
+            
         });
         
         let parsed = readString(file, {
             worker: true,
             header: true,
+            skipEmptyLines: true,
             complete: (results) => {
                 setParsedCsvData(results.data)
+                console.log(results.data.map(o=>Object.keys(o)))
             },
         });
+        
     };
     
-    
+    console.log(csv && csv.map((parsedData, index) => (parsedData)))
 
     useEffect(() => {
         document.title = "Home"
@@ -67,17 +66,24 @@ const Home = () => {
                 <input type="file" accept=".csv" onChange={handleChange} />
                  <button onClick = {() => handleFile()} type="submit" className="submit_btn">Submit</button>
             </form>
-            <table>
+            <table className='table'>
                 <thead>
                     <tr>
                     <th>Data</th>
                     <th>Hora</th>
                     <th>Produto</th>
                     <th>ISIN</th>
+                    <th>Bolsa de origem</th>
                     <th>Bolsa</th>
                     <th>Quantidade</th>
                     <th>Preços</th>
+                    <th>Moeda (Preço)</th>
+                    <th>Valor Local</th>
+                    <th>Moeda (Valor Local)</th>
                     <th>Valor</th>
+                    <th>Moeda (Valor)</th>
+                    <th>Taxa de cãmbio</th>
+                    <th>Comissões</th>
                     <th>Total</th>
                     </tr>
                 </thead>
@@ -88,10 +94,17 @@ const Home = () => {
                         <td>{parsedData.Hora}</td>
                         <td>{parsedData.Produto}</td>
                         <td>{parsedData.ISIN}</td>
+                        <td>{parsedData["Bolsa de"]}</td>
                         <td>{parsedData.Bolsa}</td>
                         <td>{parsedData.Quantidade}</td>
                         <td>{parsedData.Preços}</td>
+                        <td>{parsedData._1}</td>
+                        <td>{parsedData["Valor local"]}</td>
+                        <td>{parsedData._2}</td>
                         <td>{parsedData.Valor}</td>
+                        <td>{parsedData._3}</td>
+                        <td>{parsedData["Taxa de Câmbio"]}</td>
+                        <td>{parsedData["Custos de transação"]}</td>
                         <td>{parsedData.Total}</td>
                     </tr>
                     ))}
