@@ -52,5 +52,6 @@
 
 table, th, td {
   border: 1px solid;
-  width: auto;
+  border-color: #f1356d;
+  
 }

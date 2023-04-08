@@ -37,22 +37,15 @@ const Home = () => {
     const handleFile = () => {
         readString(file, {
             worker: true,
-            
-        });
-        
-        let parsed = readString(file, {
-            worker: true,
             header: true,
             skipEmptyLines: true,
             complete: (results) => {
                 setParsedCsvData(results.data)
-                console.log(results.data.map(o=>Object.keys(o)))
-            },
+            }
         });
         
     };
     
-    console.log(csv && csv.map((parsedData, index) => (parsedData)))
 
     useEffect(() => {
         document.title = "Home"
