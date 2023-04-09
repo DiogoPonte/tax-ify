@@ -60,3 +60,8 @@ th, td {
   border-color: #f1356d;
   padding-right: 15px;
 }
+
+.home h3 {
+  padding-top: 35px;
+  padding-bottom: 75px;
+}
