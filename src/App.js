@@ -3,10 +3,10 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 
 //Component imports
-import Home from "./Components/Home";
-import Navbar from "./Components/Navbar";
-import Sales from "./Components/Sales";
-import Dashboard from "./Components/Dashboard";
+import Home from "./Pages/Home";
+import Navbar from "./Pages/Navbar";
+import Sales from "./Pages/Sales";
+import Dashboard from "./Pages/Dashboard";
 
 function App() {
   return (

@@ -1,67 +1,76 @@
+import { groupBy } from 'lodash-es';
 import React, { useState, useEffect } from 'react';
 import { usePapaParse } from 'react-papaparse';
 
 
-const Sales = () => {
+export default function Sales () {
 
     useEffect(() => {
-        document.title = "Sales"
+        document.title = "Sales";
      }, []);
 
-    const { readString } = usePapaParse();
-    const [file, setFile] = useState();
-    const fileReader = new FileReader();
-
-    const handleChange = (e) => {
-        setFile(e.target.files[0]);
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (file) {
-            fileReader.onload = function (event) {
-                const csvOutput = event.target.result;
-            };
-
-            fileReader.readAsText(file);
-        }
-
-        console.log(file)
-
-    };
-    
-
-    let [csv, setParsedCsvData] = useState([]);
-    
-
-    const handleFile = () => {
-        readString(file, {
-            worker: true,
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-                setParsedCsvData(results.data)
-            }
-        });
-        
-    };
-
-
-    let sales = csv.filter((csv)=> csv["Quantidade"] < 0 )
-    
+     const { readString } = usePapaParse();
+     const [file, setFile] = useState();
+     const fileReader = new FileReader();
+ 
+     const handleChange = (e) => {
+         setFile(e.target.files[0]);
+     };
+ 
+     const handleSubmit = (e) => {
+         e.preventDefault();
+ 
+         if (file) {
+             fileReader.onload = function (event) {
+                 const csvOutput = event.target.result;
+             };
+ 
+             fileReader.readAsText(file);
+         }
+ 
+         console.log(file)
+ 
+     };
+     
+ 
+     let [csv, setParsedCsvData] = useState([]);
+     
+ 
+     const handleFile = () => {
+         readString(file, {
+             worker: true,
+             header: true,
+             skipEmptyLines: true,
+             complete: (results) => {
+                 setParsedCsvData(results.data)
+             }
+         });
+         
+     };
+ 
 
 
-    
+
+
+    //process sales data
+
+
+     let SalesData = csv.filter((csv)=> csv["Quantidade"] < 0 )
+     console.log(SalesData)
+     const dataa = groupBy(SalesData, sales => sales.Data + sales.ISIN)
+     console.log(dataa)
+
+
+
     return ( 
         <div className="sales">
             <h2>Sales</h2>
-            <h3 className="action"> Please, select file to upload</h3>            
+            <h3 className="action"> Please, select file to upload</h3> 
             <form className = "csv_input" onSubmit={handleSubmit}>
-                <input type="file" accept=".csv" onChange={handleChange} />
+                 <input type="file" accept=".csv" onChange={handleChange} />
                  <button onClick = {() => handleFile()} type="submit" className="submit_btn">Submit</button>
             </form>
-            {sales.length>0? (
+            {SalesData.length>0? (
             <table className='table'>
                 <thead>
                     <tr>
@@ -84,7 +93,7 @@ const Sales = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {sales && sales.map((parsedData, index) => (
+                {SalesData && SalesData.map((parsedData, index) => (
                     <tr key={index}>
                         <td>{parsedData.Data}</td>
                         <td>{parsedData.Hora}</td>
@@ -106,8 +115,8 @@ const Sales = () => {
                     ))}
                 </tbody>
                 </table>) : null }
+            
         </div>
      );
 }
  
-export default Sales;
