@@ -1,6 +1,17 @@
-import { groupBy } from 'lodash-es';
 import React, { useState, useEffect } from 'react';
 import { usePapaParse } from 'react-papaparse';
+
+
+
+function FormCSV (props) {
+    return (
+        <form className = "csv_input" onSubmit={props.submit}>
+            <input type="file" accept=".csv" onChange={props.change} />
+            <button onClick = {props.file} type="submit" className="submit_btn">Submit</button>
+        </form>
+    )
+}
+
 
 
 export default function Sales () {
@@ -28,13 +39,15 @@ export default function Sales () {
              fileReader.readAsText(file);
          }
  
-         console.log(file)
+         //console.log(file)
  
      };
      
- 
-     let [csv, setParsedCsvData] = useState([]);
+
      
+     const [data, setData] = useState([])
+     const [columnArray, setColumn] = useState([])
+     const [value, setValue] = useState([])
  
      const handleFile = () => {
          readString(file, {
@@ -42,7 +55,27 @@ export default function Sales () {
              header: true,
              skipEmptyLines: true,
              complete: (results) => {
-                 setParsedCsvData(results.data)
+
+                let columnArray = [];
+                const valuesArray = [];
+
+                results.data.map ((d) => {
+                    columnArray.push(Object.keys(d));
+                    valuesArray.push(Object.values(d))
+                } );
+
+                columnArray[0][4] = "Bolsa de origem"
+                columnArray[0][8] = "Moeda (Preço)"
+                columnArray[0][10] = "Moeda (Valor local)"
+                columnArray[0][12] = "Moeda (Valor)"
+                columnArray[0][15] = "Moeda (Custos)"
+                columnArray[0][17] = "Moeda (Total)"
+                
+
+                setData(columnArray[0].concat(valuesArray))
+                setColumn(columnArray[0])
+                setValue(valuesArray)
+
              }
          });
          
@@ -50,67 +83,42 @@ export default function Sales () {
  
 
 
-
+    console.log(data)
 
     //process sales data
 
 
-     let SalesData = csv.filter((csv)=> csv["Quantidade"] < 0 )
+     let SalesData = value.filter((csv)=> csv[6] < 0 )
      console.log(SalesData)
-     const dataa = groupBy(SalesData, sales => sales.Data + sales.ISIN)
-     console.log(dataa)
+     //const csvJSON = JSON.stringify(SalesData)
 
 
+     //console.log(csvJSON)
+
+     //SalesData = JSON.parse(csvJSON) --- para inserir na tabela
 
     return ( 
         <div className="sales">
             <h2>Sales</h2>
             <h3 className="action"> Please, select file to upload</h3> 
-            <form className = "csv_input" onSubmit={handleSubmit}>
-                 <input type="file" accept=".csv" onChange={handleChange} />
-                 <button onClick = {() => handleFile()} type="submit" className="submit_btn">Submit</button>
-            </form>
-            {SalesData.length>0? (
+
+            <FormCSV submit = {handleSubmit} change = {handleChange} file = {handleFile}/>
+
+            {value.length>0? (
             <table className='table'>
                 <thead>
                     <tr>
-                    <th>Data</th>
-                    <th>Hora</th>
-                    <th>Produto</th>
-                    <th>ISIN</th>
-                    <th>Bolsa de origem</th>
-                    <th>Bolsa</th>
-                    <th>Quantidade</th>
-                    <th>Preços</th>
-                    <th>Moeda (Preço)</th>
-                    <th>Valor Local</th>
-                    <th>Moeda (Valor Local)</th>
-                    <th>Valor</th>
-                    <th>Moeda (Valor)</th>
-                    <th>Taxa de cãmbio</th>
-                    <th>Comissões</th>
-                    <th>Total</th>
+                    {columnArray.map((col, i) => 
+                        <th key = {i}>{col}</th>
+                    )}
                     </tr>
                 </thead>
                 <tbody>
                 {SalesData && SalesData.map((parsedData, index) => (
                     <tr key={index}>
-                        <td>{parsedData.Data}</td>
-                        <td>{parsedData.Hora}</td>
-                        <td>{parsedData.Produto}</td>
-                        <td>{parsedData.ISIN}</td>
-                        <td>{parsedData["Bolsa de"]}</td>
-                        <td>{parsedData.Bolsa}</td>
-                        <td>{parsedData.Quantidade}</td>
-                        <td>{parsedData.Preços}</td>
-                        <td>{parsedData._1}</td>
-                        <td>{parsedData["Valor local"]}</td>
-                        <td>{parsedData._2}</td>
-                        <td>{parsedData.Valor}</td>
-                        <td>{parsedData._3}</td>
-                        <td>{parsedData["Taxa de Câmbio"]}</td>
-                        <td>{parsedData["Custos de transação"]}</td>
-                        <td>{parsedData.Total}</td>
+                        {parsedData.map((val, i) => (
+                            <td key={i}>{val}</td>
+                        ))}
                     </tr>
                     ))}
                 </tbody>
