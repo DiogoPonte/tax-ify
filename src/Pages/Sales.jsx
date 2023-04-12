@@ -1,16 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePapaParse } from 'react-papaparse';
-
-
-
-function FormCSV (props) {
-    return (
-        <form className = "csv_input" onSubmit={props.submit}>
-            <input type="file" accept=".csv" onChange={props.change} />
-            <button onClick = {props.file} type="submit" className="submit_btn">Submit</button>
-        </form>
-    )
-}
+import FormCSV from '../Controllers/Form';
 
 
 
@@ -20,9 +10,12 @@ export default function Sales () {
         document.title = "Sales";
      }, []);
 
+     
      const { readString } = usePapaParse();
      const [file, setFile] = useState();
      const fileReader = new FileReader();
+
+
  
      const handleChange = (e) => {
          setFile(e.target.files[0]);
@@ -30,17 +23,6 @@ export default function Sales () {
  
      const handleSubmit = (e) => {
          e.preventDefault();
- 
-         if (file) {
-             fileReader.onload = function (event) {
-                 const csvOutput = event.target.result;
-             };
- 
-             fileReader.readAsText(file);
-         }
- 
-         //console.log(file)
- 
      };
      
 
@@ -74,7 +56,7 @@ export default function Sales () {
 
                 setData(columnArray[0].concat(valuesArray))
                 setColumn(columnArray[0])
-                setValue(valuesArray)
+                setValue(valuesArray)         
 
              }
          });
@@ -83,20 +65,15 @@ export default function Sales () {
  
 
 
-    console.log(data)
+    
 
     //process sales data
 
 
      let SalesData = value.filter((csv)=> csv[6] < 0 )
      console.log(SalesData)
-     //const csvJSON = JSON.stringify(SalesData)
-
-
-     //console.log(csvJSON)
-
-     //SalesData = JSON.parse(csvJSON) --- para inserir na tabela
-
+     
+     
     return ( 
         <div className="sales">
             <h2>Sales</h2>

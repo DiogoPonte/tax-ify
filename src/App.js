@@ -8,6 +8,7 @@ import Navbar from "./Pages/Navbar";
 import Sales from "./Pages/Sales";
 import Dashboard from "./Pages/Dashboard";
 
+
 function App() {
   return (
     <Router>
